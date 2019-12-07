@@ -29,7 +29,7 @@ void func(int sockfd)
 
         read(sockfd, buffer, sizeof(buff));
                 
-                //reads string for to compare for exit from client message
+                //reads string for comparison to exit from client message
                 if ((strncmp(buff, "exit", 4)) == 0) {
             printf("Client Left - Server Now Exiting...\n");
             break;
@@ -47,4 +47,56 @@ void func(int sockfd)
     }
 }
 
+int main()
+{
+    int sockfd, connfd, len;
+    struct sockaddr_in servaddr, cli;
+
+    // create socket and verify
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd == -1) {
+        printf("failed to create socket...\n");
+        exit(0);
+    }
+    else
+        printf("created Socket successfully..\n");
+    bzero(&servaddr, sizeof(servaddr));
+
+    // assign IP, PORT
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servaddr.sin_port = htons(PORT);
+
+    // Binding newly created socket to given IP and verification
+    if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
+        printf("socket bind failed...\n");
+        exit(0);
+    }
+    else
+        printf("Socket successfully binded..\n");
+
+    // Now server is ready to listen and verification
+    if ((listen(sockfd, 5)) != 0) {
+        printf("Listen failed...\n");
+        exit(0);
+    }
+    else
+        printf("Server listening..\n");
+    len = sizeof(cli);
+
+    // Accept the data packet from client and verification
+    connfd = accept(sockfd, (SA*)&cli, &len);
+    if (connfd < 0) {
+        printf("server acccept failed...\n");
+        exit(0);
+    }
+    else
+        printf("connected...\n");
+
+    // Chat Function
+    func(connfd);
+
+    // Close Socket
+    close(sockfd);
+}
 
