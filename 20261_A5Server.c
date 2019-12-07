@@ -25,12 +25,12 @@ void func(int sockfd)
     int n;
     // chat loop
     for (;;) {
-        bzero(buff, MAX);
+        bzero(buffer, MAX);
 
-        read(sockfd, buffer, sizeof(buff));
+        read(sockfd, buffer, sizeof(buffer));
                 
                 //reads string for comparison to exit from client message
-                if ((strncmp(buff, "exit", 4)) == 0) {
+                if ((strncmp(buffer, "exit", 4)) == 0) {
             printf("Client Left - Server Now Exiting...\n");
             break;
         }
